@@ -4,6 +4,7 @@ const dotenv = require("dotenv").config();
 const port = process.env.PORT || 6001;
 const connectToDatabase = require("./config/database");
 const { errorHandler } = require("./middlewares/errorHandler");
+const { userQueuePublishUser } = require("./messageBroker/userQueue");
 
 connectToDatabase();
 
@@ -15,6 +16,11 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/account", require("./routes/accountRoutes"));
+
+// Message Broker triger event
+userQueuePublishUser();
+//
+
 app.use(errorHandler);
 
 app.listen(port, () => {
